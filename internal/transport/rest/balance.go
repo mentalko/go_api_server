@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	// "github.com/mentalko/go_api_server/internal/core"
 )
 
 func (h *Handler) topupBalance(w http.ResponseWriter, r *http.Request) {
@@ -16,13 +15,12 @@ func (h *Handler) topupBalance(w http.ResponseWriter, r *http.Request) {
 
 	account_id, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		log.Println("topupBalance() error:", err)
+		respondError(w, http.StatusBadRequest, err.Error())
 	}
 
 	account, err := h.accountsService.GetByID(context.TODO(), account_id)
 	if err != nil {
-		log.Println("topupBalance() error:", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		respondError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -40,8 +38,7 @@ func (h *Handler) topupBalance(w http.ResponseWriter, r *http.Request) {
 
 	err = h.accountsService.Update(context.TODO(), account_id, account)
 	if err != nil {
-		log.Println("topupBalance() error: cant update data", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		respondError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -58,13 +55,12 @@ func (h *Handler) exchangeBalance(w http.ResponseWriter, r *http.Request) {
 
 	account_id, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		log.Println("exchangeBalance() error:", err)
+		respondError(w, http.StatusBadRequest, err.Error())
 	}
 
 	account, err := h.accountsService.GetByID(context.TODO(), account_id)
 	if err != nil {
-		log.Println("exchangeBalance() error:", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		respondError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -84,8 +80,7 @@ func (h *Handler) exchangeBalance(w http.ResponseWriter, r *http.Request) {
 
 	err = h.accountsService.Update(context.TODO(), account_id, account)
 	if err != nil {
-		log.Println("exchangeBalance() error: cant update data", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		respondError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
